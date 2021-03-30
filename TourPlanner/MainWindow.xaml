@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TourPlanner"
+        xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TourPlannerVM}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="430">
     <Grid ShowGridLines="True" HorizontalAlignment="Left">
@@ -29,8 +30,49 @@
         
         <TextBox Grid.Column="0" Grid.Row="2" Margin="5" Grid.ColumnSpan="3" Text="Search"></TextBox>
         <TextBox Grid.Column="3" Grid.Row="2" Margin="5">🔎</TextBox>
-        <DockPanel Grid.Column="0" Grid.Row="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5"></DockPanel>
-        <DockPanel Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"></DockPanel>
+        <Grid Grid.Column="0" Grid.Row="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Grid.Row="0">Tours</Label>
+            <Button Grid.Column="1" Grid.Row="0">+</Button>
+            <Button Grid.Column="2" Grid.Row="0">-</Button>
+            <ListBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Tours}"></ListBox>
+        </Grid>
+        <Grid Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Margin="5px">Title:</Label>
+            <TabControl Grid.Column="0" Grid.Row="1">
+                <TabItem Header="Route">
+                    <Label>Route</Label>
+                </TabItem>
+                <TabItem Header="Description">
+                    <Label>Description</Label>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Grid.Row="0">Logs:</Label>
+        </Grid>
 
     </Grid>
 </Window>
