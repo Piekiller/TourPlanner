@@ -13,6 +13,8 @@ namespace TourPlanner.ViewModels
         protected void RaisePropertyChangedEvent([CallerMemberName] string propertyName = "")
         {
             ValidatePropertyName(propertyName);
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void ValidatePropertyName(string propertyName)
