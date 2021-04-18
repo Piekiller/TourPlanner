@@ -12,16 +12,19 @@ namespace TourPlanner.ViewModels
 {
     public class TourPlannerVM:ViewModelBase
     {
-        public ObservableCollection<Tour> Tours { get; private set; } = new ObservableCollection<Tour>();
-        public ICommand AddCommand { get; private set; } = new RelayCommand(() =>
-        {
-            //Tours.Add(new Tour("", "", "", 0));
-            Debug.Print("Test");
-
-        });
-        //public ICommand RemoveCommand { get; private set; } = new RelayCommand(() => Tours.RemoveAt(Tours.Count));
+        public ObservableCollection<Tour> Tours { get; private set; } 
+        public ICommand AddCommand { get; private set; } 
+        public ICommand RemoveCommand { get; private set; } 
         public TourPlannerVM()
         {
+            this.Tours= new ObservableCollection<Tour>();
+            this.AddCommand = new RelayCommand(OpenAddTourWindow);
+            this.RemoveCommand = new RelayCommand(() => Tours.RemoveAt(Tours.Count-1));
+        }
+        public void OpenAddTourWindow()
+        {
+            AddTour addTour = new AddTour();
+            addTour.Show();
         }
     }
 }

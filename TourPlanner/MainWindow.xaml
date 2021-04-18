@@ -7,6 +7,9 @@
         xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TourPlannerVM}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="430">
+    <Window.DataContext>
+        <viewmodels:TourPlannerVM/>
+    </Window.DataContext>
     <Grid ShowGridLines="True" HorizontalAlignment="Left">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
