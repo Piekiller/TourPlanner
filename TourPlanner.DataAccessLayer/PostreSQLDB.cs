@@ -5,7 +5,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.DataAccessLayer
 {
-    class PostreSQLDB : IDataAccess
+    public class PostreSQLDB : IDataAccess
     {
         public PostreSQLDB()
         {

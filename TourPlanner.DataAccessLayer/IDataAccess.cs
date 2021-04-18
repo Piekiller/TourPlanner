@@ -4,7 +4,7 @@ using System.Text;
 using TourPlanner.Models;
 namespace TourPlanner.DataAccessLayer
 {
-    interface IDataAccess
+    public interface IDataAccess
     {
         public void SaveTour(Tour t);
         public List<Tour> GetTours();
