@@ -27,11 +27,6 @@ namespace TourPlanner.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public List<TourLog> GetTourLogs(TourLog tl)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Tour> GetTours()
         {
             throw new NotImplementedException();
