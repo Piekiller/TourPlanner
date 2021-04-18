@@ -4,7 +4,7 @@ using System.Text;
 using TourPlanner.Models;
 namespace TourPlanner.DataAccessLayer
 {
-    class InMemoryDB:IDataAccess
+    public class InMemoryDB:IDataAccess
     {
         List<Tour> tours = new List<Tour>();
         List<TourLog> tourLogs = new List<TourLog>();
