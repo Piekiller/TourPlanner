@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TourPlanner.Models
 {
-    class TourLog : IEquatable<TourLog>
+    public class TourLog : IEquatable<TourLog>
     { 
         public DateTime Date { get; private set; }
         public string Report { get; private set; }
