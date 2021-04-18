@@ -12,7 +12,7 @@ namespace TourPlanner.DataAccessLayer
         public void UpdateTour(Tour t);
 
         public void SaveTourLog(TourLog tl);
-        public List<TourLog> GetTourLogs();
+        public List<TourLog> GetTourLogs(Tour t);
         public void DeleteTourLog(TourLog tl); 
         public void UpdateTourLog(TourLog tl);
 
