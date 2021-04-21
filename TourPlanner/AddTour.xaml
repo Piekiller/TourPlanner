@@ -26,9 +26,9 @@
         <Label Grid.Row="1">Description:</Label>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description}"></TextBox>
         <Label Grid.Row="2">Route Information:</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Route_information}" ></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Route_Information}" ></TextBox>
         <Label Grid.Row="3">Distance:</Label>
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Distance}" ></TextBox>
-        <Button Grid.Row="4" Width="70" Height="20px" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Command="{Binding AddTourCommand}"> Save </Button>
+        <Button Grid.Row="4" Width="70" Height="20px" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Command="{Binding AddTourCommand, IsAsync=True}"> Save </Button>
     </Grid>
 </Window>
