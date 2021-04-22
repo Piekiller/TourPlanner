@@ -7,15 +7,15 @@ namespace TourPlanner.Models
     { 
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public string Route_Information { get; private set; }
+        public string RouteInformation { get; private set; }
         public double Distance { get; private set; }
         public Guid Id { get; private set; }
 
-        public Tour(string name, string description, string route_Information, double distance)
+        public Tour(string name, string description, string routeInformation, double distance)
         {
             Name = name;
             Description = description;
-            Route_Information = route_Information;
+            RouteInformation = routeInformation;
             Distance = distance;
             Id = Guid.NewGuid();
         }
