@@ -24,7 +24,7 @@ namespace TourPlanner.BusinessLayer
         public async Task<Guid> SaveImage(Route route)
         {
             WebClient webClient = new WebClient();
-            Uri uri = new Uri("https://www.mapquestapi.com/staticmap/v5/map?session="+route.sessionID);
+            Uri uri = new Uri("https://www.mapquestapi.com/staticmap/v5/map?session="+route.sessionID+ "&key=tAWh5opsYQrHfVFKj8mvuik14om0KHMo");
             Guid guid = Guid.NewGuid();
             await webClient.DownloadFileTaskAsync(uri, guid.ToString());
             Debug.WriteLine(route.sessionID);
