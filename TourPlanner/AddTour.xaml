@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TourPlanner" xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels"
+        xmlns:local="clr-namespace:TourPlanner" 
+        xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TourPlannerVM}"
         mc:Ignorable="d"
         Title="AddTour" Height="196" Width="359">
     <Grid>
@@ -19,13 +20,13 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0">Name:</Label>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}"></TextBox>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"></TextBox>
         <Label Grid.Row="1">Description:</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description}"></TextBox>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description, Mode=TwoWay}"></TextBox>
         <Label Grid.Row="2">Route Information:</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RouteInformation}" ></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RouteInformation, Mode=TwoWay}" ></TextBox>
         <Label Grid.Row="3">Distance:</Label>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Distance}" ></TextBox>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Distance, Mode=TwoWay}" ></TextBox>
         <Button Grid.Row="4" Width="70" Height="20px" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Command="{Binding AddTourCommand, IsAsync=True}"> Save </Button>
     </Grid>
 </Window>

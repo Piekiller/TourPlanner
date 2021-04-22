@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+
 using System.ComponentModel;
 using TourPlanner.Models;
 using System.Windows.Input;
@@ -39,7 +40,7 @@ namespace TourPlanner.ViewModels
         }
         public Task OpenAddTourWindow()
         {
-            _addTour.Visibility = System.Windows.Visibility.Visible;
+            _addTour.Show();
             return Task.CompletedTask;
         }
         public async Task AddTour()
@@ -52,11 +53,6 @@ namespace TourPlanner.ViewModels
             this.Description = string.Empty;
             this.RouteInformation = string.Empty;
             this.Distance = 0;
-
-            base.RaisePropertyChangedEvent("Name");
-            base.RaisePropertyChangedEvent("Description");
-            base.RaisePropertyChangedEvent("RouteInformation");
-            base.RaisePropertyChangedEvent("Distance");
 
             Tours.Add(t);
             DataAccess.SaveTour(t);
