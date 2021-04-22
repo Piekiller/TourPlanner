@@ -6,9 +6,6 @@
         xmlns:local="clr-namespace:TourPlanner" xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels"
         mc:Ignorable="d"
         Title="AddTour" Height="196" Width="359">
-    <Window.DataContext>
-        <viewmodels:TourVM/>
-    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,7 +23,7 @@
         <Label Grid.Row="1">Description:</Label>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description}"></TextBox>
         <Label Grid.Row="2">Route Information:</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Route_Information}" ></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RouteInformation}" ></TextBox>
         <Label Grid.Row="3">Distance:</Label>
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Distance}" ></TextBox>
         <Button Grid.Row="4" Width="70" Height="20px" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Command="{Binding AddTourCommand, IsAsync=True}"> Save </Button>
