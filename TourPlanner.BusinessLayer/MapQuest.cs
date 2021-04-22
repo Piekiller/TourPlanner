@@ -17,9 +17,9 @@ namespace TourPlanner.BusinessLayer
             WebClient webClient = new WebClient();
             Uri uri = new Uri("http://www.mapquestapi.com/directions/v2/route?key=tAWh5opsYQrHfVFKj8mvuik14om0KHMo&from=Clarendon Blvd,Arlington,VA&to=2400+S+Glebe+Rd,+Arlington,+VA");
             string data=await webClient.DownloadStringTaskAsync(uri);
-            Route route = JsonConvert.DeserializeObject<Route>(data);
-            Debug.WriteLine(route.sessionID);
-            return route;
+            TourDeserialization tour = JsonConvert.DeserializeObject<TourDeserialization>(data);
+            Debug.WriteLine(tour.route.sessionID);
+            return tour.route;
         }
         public async Task<Guid> SaveImage(Route route)
         {
