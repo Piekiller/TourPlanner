@@ -6,6 +6,6 @@ namespace TourPlanner.BusinessLayer
 {
     public class Route
     {
-        public Guid sessionID;
+        public string sessionID;//Cant be a GUId object because mapquest doesn't send a valid GUID
     }
 }
