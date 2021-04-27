@@ -9,28 +9,41 @@ using System.Diagnostics;
 using AsyncAwaitBestPractices.MVVM;
 using System.Threading.Tasks;
 using TourPlanner.DataAccessLayer;
+using TourPlanner.BusinessLayer;
 
 namespace TourPlanner.ViewModels
 {
-    public class TourPlannerVM:ViewModelBase
+    public class TourPlannerVM : ViewModelBase
     {
-        public ObservableCollection<Tour> Tours { get; set; } 
-        public AsyncCommand AddCommand { get; private set; } 
+        public ObservableCollection<Tour> Tours { get; set; }
+        public AsyncCommand AddCommand { get; private set; }
         public AsyncCommand RemoveCommand { get; private set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string RouteInformation { get; set; }
-        public double Distance { get; set; }
+
+        public string _name;
+        public string Name { get => _name; set { _name = value; base.RaisePropertyChangedEvent(); } }
+
+        private string _description;
+        public string Description { get => _description; set { _description = value; base.RaisePropertyChangedEvent(); } }
+
+        private string _routeInformation;
+        public string RouteInformation { get => _routeInformation; set { _routeInformation = value; base.RaisePropertyChangedEvent(); } }
+
+        private double _distance;
+        public double Distance { get => _distance; set { _distance = value; base.RaisePropertyChangedEvent(); } }
+
         public AsyncCommand AddTourCommand { get; private set; }
         public IDataAccess DataAccess { get; private set; }
-        public Tour Selected { get; set; }
+
+        private Tour _selected;
+        public Tour Selected { get => _selected; set { _selected = value; base.RaisePropertyChangedEvent(); } }
+
         private AddTour _addTour;
 
         public TourPlannerVM()
         {
-            this.Tours= new ObservableCollection<Tour>();
+            this.Tours = new ObservableCollection<Tour>();
             this.AddCommand = new AsyncCommand(OpenAddTourWindow);
-            this.RemoveCommand = new AsyncCommand(async () => Tours.RemoveAt(Tours.Count-1));
+            this.RemoveCommand = new AsyncCommand(async () => Tours.RemoveAt(Tours.Count - 1));
             this.AddTourCommand = new AsyncCommand(AddTour);
 
             this.DataAccess = new InMemoryDB();//Better solution with Dependency injection
@@ -47,16 +60,15 @@ namespace TourPlanner.ViewModels
             if (string.IsNullOrWhiteSpace(Name) && string.IsNullOrWhiteSpace(Description) && string.IsNullOrWhiteSpace(RouteInformation) && this.Distance != default)
                 return;
 
-            Tour t = new Tour(this.Name, this.Description, this.RouteInformation, this.Distance);
+            MapQuest map = new MapQuest();
+            Route route = await map.GetRoute("", "");
+            Guid ig = await map.SaveImage(route);
+
+            Tour t = new Tour(this.Name, this.Description, ig.ToString()+".jpg", this.Distance);
             this.Name = string.Empty;
             this.Description = string.Empty;
             this.RouteInformation = string.Empty;
             this.Distance = 0;
-
-            base.RaisePropertyChangedEvent("Name");
-            base.RaisePropertyChangedEvent("Description");
-            base.RaisePropertyChangedEvent("RouteInformation");
-            base.RaisePropertyChangedEvent("Distance");
 
             Tours.Add(t);
             DataAccess.SaveTour(t);
