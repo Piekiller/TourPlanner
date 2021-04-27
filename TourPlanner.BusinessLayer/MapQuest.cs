@@ -15,7 +15,7 @@ namespace TourPlanner.BusinessLayer
         public async Task<Route> GetRoute(string from, string to)
         {
             WebClient webClient = new WebClient();
-            Uri uri = new Uri("http://www.mapquestapi.com/directions/v2/route?key=tAWh5opsYQrHfVFKj8mvuik14om0KHMo&from=Clarendon Blvd,Arlington,VA&to=2400+S+Glebe+Rd,+Arlington,+VA");
+            Uri uri = new Uri($"http://www.mapquestapi.com/directions/v2/route?key=tAWh5opsYQrHfVFKj8mvuik14om0KHMo&from={from}&to={to}");
             string data=await webClient.DownloadStringTaskAsync(uri);
             TourDeserialization tour = JsonConvert.DeserializeObject<TourDeserialization>(data);
             Debug.WriteLine(tour.route.sessionID);
@@ -24,9 +24,9 @@ namespace TourPlanner.BusinessLayer
         public async Task<Guid> SaveImage(Route route)
         {
             WebClient webClient = new WebClient();
-            Uri uri = new Uri("https://www.mapquestapi.com/staticmap/v5/map?session="+route.sessionID+ "&key=tAWh5opsYQrHfVFKj8mvuik14om0KHMo");
+            Uri uri = new Uri($"https://www.mapquestapi.com/staticmap/v5/map?session={route.sessionID}&key=tAWh5opsYQrHfVFKj8mvuik14om0KHMo");
             Guid guid = Guid.NewGuid();
-            await webClient.DownloadFileTaskAsync(uri, guid.ToString());
+            await webClient.DownloadFileTaskAsync(uri, guid.ToString()+".jpg");
             Debug.WriteLine(route.sessionID);
             return guid;
         }
