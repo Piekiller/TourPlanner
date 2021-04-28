@@ -34,8 +34,9 @@ namespace TourPlanner.ViewModels
         public AsyncCommand AddTourCommand { get; private set; }
         public IDataAccess DataAccess { get; private set; }
 
-        private Tour _selected;
-        public Tour Selected { get => _selected; set { _selected = value; base.RaisePropertyChangedEvent(); } }
+        private Tour _selectedTour;
+        public Tour SelectedTour { get => _selectedTour; set { _selectedTour = value; base.RaisePropertyChangedEvent(); } }
+
 
         private AddTour _addTour;
 
@@ -43,7 +44,7 @@ namespace TourPlanner.ViewModels
         {
             this.Tours = new ObservableCollection<Tour>();
             this.AddCommand = new AsyncCommand(OpenAddTourWindow);
-            this.RemoveCommand = new AsyncCommand(async () => Tours.RemoveAt(Tours.Count - 1));
+            this.RemoveCommand = new AsyncCommand(RemoveTour);
             this.AddTourCommand = new AsyncCommand(AddTour);
 
             this.DataAccess = new InMemoryDB();//Better solution with Dependency injection
@@ -55,24 +56,31 @@ namespace TourPlanner.ViewModels
             _addTour.Visibility = System.Windows.Visibility.Visible;
             return Task.CompletedTask;
         }
+        public async Task RemoveTour()
+        {
+            Tours.Remove(SelectedTour);
+            await DataAccess.DeleteTour(SelectedTour);
+        }
         public async Task AddTour()
         {
             if (string.IsNullOrWhiteSpace(Name) && string.IsNullOrWhiteSpace(Description) && string.IsNullOrWhiteSpace(RouteInformation) && this.Distance != default)
                 return;
 
+            _addTour.Visibility = System.Windows.Visibility.Hidden;//Closing makes the window unusable for reshowing it.
+
             MapQuest map = new MapQuest();
-            Route route = await map.GetRoute("", "");
+            Route route = await map.GetRoute("Vienna", "Salzburg");
             Guid ig = await map.SaveImage(route);
 
-            Tour t = new Tour(this.Name, this.Description, ig.ToString()+".jpg", this.Distance);
+            Tour t = new Tour(this.Name, this.Description, Environment.CurrentDirectory +"\\"+ ig.ToString()+".jpg", this.Distance);
             this.Name = string.Empty;
             this.Description = string.Empty;
             this.RouteInformation = string.Empty;
             this.Distance = 0;
 
             Tours.Add(t);
-            DataAccess.SaveTour(t);
-            _addTour.Visibility = System.Windows.Visibility.Hidden;//Closing makes the window unusable for reshowing it.
+            await DataAccess.SaveTour(t);
+            
         }
     }
 }
