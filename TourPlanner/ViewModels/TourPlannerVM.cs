@@ -25,11 +25,14 @@ namespace TourPlanner.ViewModels
         private string _description;
         public string Description { get => _description; set { _description = value; base.RaisePropertyChangedEvent(); } }
 
-        private string _routeInformation;
-        public string RouteInformation { get => _routeInformation; set { _routeInformation = value; base.RaisePropertyChangedEvent(); } }
-
         private double _distance;
         public double Distance { get => _distance; set { _distance = value; base.RaisePropertyChangedEvent(); } }
+
+        private string _startpoint;
+        public string StartPoint { get => _startpoint; set { _startpoint = value; base.RaisePropertyChangedEvent(); } }
+
+        private string _endpoint;
+        public string EndPoint { get => _endpoint; set { _endpoint = value; base.RaisePropertyChangedEvent(); } }
 
         public AsyncCommand AddTourCommand { get; private set; }
         public IDataAccess DataAccess { get; private set; }
@@ -63,20 +66,21 @@ namespace TourPlanner.ViewModels
         }
         public async Task AddTour()
         {
-            if (string.IsNullOrWhiteSpace(Name) && string.IsNullOrWhiteSpace(Description) && string.IsNullOrWhiteSpace(RouteInformation) && this.Distance != default)
+            if (string.IsNullOrWhiteSpace(Name) && string.IsNullOrWhiteSpace(Description)  && this.Distance != default&& string.IsNullOrWhiteSpace(StartPoint)&&string.IsNullOrWhiteSpace(EndPoint))
                 return;
 
             _addTour.Visibility = System.Windows.Visibility.Hidden;//Closing makes the window unusable for reshowing it.
 
             MapQuest map = new MapQuest();
-            Route route = await map.GetRoute("Vienna", "Salzburg");
+            Route route = await map.GetRoute(StartPoint, EndPoint);
             Guid ig = await map.SaveImage(route);
 
-            Tour t = new Tour(this.Name, this.Description, Environment.CurrentDirectory +"\\"+ ig.ToString()+".jpg", this.Distance);
+            Tour t = new Tour(this.Name, this.Description, Environment.CurrentDirectory +"\\"+ ig.ToString()+".jpg", this.Distance,this.StartPoint,this.EndPoint);
             this.Name = string.Empty;
             this.Description = string.Empty;
-            this.RouteInformation = string.Empty;
             this.Distance = 0;
+            this.StartPoint = string.Empty;
+            this.EndPoint= string.Empty;
 
             Tours.Add(t);
             await DataAccess.SaveTour(t);

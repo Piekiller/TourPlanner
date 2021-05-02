@@ -64,7 +64,9 @@
             <Label Grid.Column="0" Grid.Row="0" Content="{Binding SelectedTour.Name}"></Label>
             <TabControl Grid.Column="0" Grid.Row="1">
                 <TabItem Header="Route">
-                    <Image Source="{Binding SelectedTour.RouteInformation}" ></Image>
+                    <ScrollViewer>
+                        <Image Source="{Binding SelectedTour.RouteInformation}" Stretch="UniformToFill"/>
+                    </ScrollViewer>
                 </TabItem>
                 <TabItem Header="Description">
                     <Label Content="{Binding SelectedTour.Description}"></Label>

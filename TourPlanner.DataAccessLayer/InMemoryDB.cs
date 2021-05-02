@@ -30,13 +30,13 @@ namespace TourPlanner.DataAccessLayer
         public Task SaveTour(Tour t)
         {
             tours.Add(t);
-            AddedTour(this,t);
+            //AddedTour!(this,t);
             return Task.CompletedTask;
         }
         public Task SaveTourLog(TourLog tl)
         {
             tourLogs.Add(tl);
-            AddedTourLog(this, tl);
+            //AddedTourLog!(this, tl);
             return Task.CompletedTask;
         }
 
