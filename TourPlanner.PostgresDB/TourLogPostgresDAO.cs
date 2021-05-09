@@ -66,7 +66,7 @@ namespace TourPlanner.PostgresDB
             DbCommand command = _database.CreateCommand(SQL_GET_ALL_TOURLOGS);
             _database.DefineParameter<Guid>(command, "@TourId", DbType.Guid, tour.Id);
             using IDataReader reader = await _database.ExecuteReader(command);
-            List<TourLog> tourlogs = new();
+            List<TourLog> tourlogs = new List<TourLog>();
             while (reader.Read())
                 tourlogs.Add(new TourLog(
                 (DateTime)reader["Date"], (string)reader["Report"], (double)reader["Distance"],

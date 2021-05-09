@@ -32,6 +32,9 @@ namespace TourPlanner.PostgresDB
             _database.DefineParameter(command, "@Description", DbType.String, tour.Description);
             _database.DefineParameter(command, "@RouteInformation", DbType.String, tour.RouteInformation);
             _database.DefineParameter(command, "@Distance", DbType.Double, tour.Distance);
+            _database.DefineParameter(command, "@StartPoint", DbType.String, tour.StartPoint);
+            _database.DefineParameter(command, "@EndPoint", DbType.String, tour.EndPoint);
+            _database.DefineParameter(command, "@Id", DbType.Guid, tour.Id);
             return await FindById(await _database.ExecuteScalar(command));
         }
 
@@ -47,6 +50,7 @@ namespace TourPlanner.PostgresDB
             DbCommand command = _database.CreateCommand(SQL_FIND_BY_ID);
             _database.DefineParameter<Guid>(command, "@Id", DbType.Guid, id);
             using IDataReader reader = await _database.ExecuteReader(command);
+            reader.Read();
             return new Tour(
                 (string)reader["Name"], (string)reader["Description"], (string)reader["RouteInformation"],
                 (double)reader["Distance"], (string)reader["StartPoint"], (string)reader["EndPoint"], (Guid)reader["Id"]);
@@ -56,7 +60,7 @@ namespace TourPlanner.PostgresDB
         {
             DbCommand command = _database.CreateCommand(SQL_GET_ALL_TOURS);
             using IDataReader reader = await _database.ExecuteReader(command);
-            List <Tour> tours= new();
+            List <Tour> tours= new List<Tour>();
             while (reader.Read())
                 tours.Add(new Tour(
                 (string)reader["Name"], (string)reader["Description"], (string)reader["RouteInformation"],

@@ -21,7 +21,7 @@ namespace TourPlanner.PostgresDB
         public int DeclareParameter(DbCommand command, string name, DbType type)
         {
             if (!command.Parameters.Contains(name))
-                command.Parameters.Add(new NpgsqlParameter(name, type));
+                return command.Parameters.Add(new NpgsqlParameter(name, type));
             throw new ArgumentException($"Parameter {name} already exists.");
         }
 

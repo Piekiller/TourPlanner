@@ -10,6 +10,8 @@ using AsyncAwaitBestPractices.MVVM;
 using System.Threading.Tasks;
 using TourPlanner.DataAccessLayer;
 using TourPlanner.BusinessLayer;
+using TourPlanner.DataAccessLayer.Common;
+using TourPlanner.DataAccessLayer.DAO;
 
 namespace TourPlanner.ViewModels
 {
@@ -35,7 +37,7 @@ namespace TourPlanner.ViewModels
         public string EndPoint { get => _endpoint; set { _endpoint = value; base.RaisePropertyChangedEvent(); } }
 
         public AsyncCommand AddTourCommand { get; private set; }
-        public IDataAccess DataAccess { get; private set; }
+        public IDatabase Database { get; private set; }
 
         private Tour _selectedTour;
         public Tour SelectedTour { get => _selectedTour; set { _selectedTour = value; base.RaisePropertyChangedEvent(); } }
@@ -50,7 +52,7 @@ namespace TourPlanner.ViewModels
             this.RemoveCommand = new AsyncCommand(RemoveTour);
             this.AddTourCommand = new AsyncCommand(AddTour);
 
-            this.DataAccess = new InMemoryDB();//Better solution with Dependency injection
+            this.Database = DALFactory.GetDatabase();
             this._addTour = new AddTour();
             _addTour.DataContext = this;
         }
@@ -62,7 +64,8 @@ namespace TourPlanner.ViewModels
         public async Task RemoveTour()
         {
             Tours.Remove(SelectedTour);
-            await DataAccess.DeleteTour(SelectedTour);
+            ITourDAO tourDAO= DALFactory.CreateTourDAO();
+            await tourDAO.DeleteTour(SelectedTour.Id);
         }
         public async Task AddTour()
         {
@@ -83,8 +86,9 @@ namespace TourPlanner.ViewModels
             this.EndPoint= string.Empty;
 
             Tours.Add(t);
-            await DataAccess.SaveTour(t);
-            
+            ITourDAO tourDAO = DALFactory.CreateTourDAO();
+            await tourDAO.AddNewTour(t);
+
         }
     }
 }
