@@ -18,6 +18,7 @@ namespace TourPlanner.PostgresDB
         private const string SQL_INSERT_NEW_TOURLOG =
             "INSERT INTO public.\"TourLog\" (\"Date\",\"Report\",\"Distance\",\"Time\",\"Rating\",\"Id\",\"AvgSpeed\",\"BurnedJoule\",\"Difficulty\",\"HeightDelta\",\"TourId\",\"MaxSpeed\") " +
             "VALUES (@Date,@Report,@Distance,@Time,@Rating,@Id,@AvgSpeed,@BurnedJoule,@Difficulty,@HeightDelta,@TourId,@MaxSpeed) RETURNING \"Id\";";
+        private const string SQL_DELETE_TOURLOG = "DELETE FROM public.\"TourLog\" WHERE \"Id\"=@Id;";
         private IDatabase _database;
         private ITourDAO _tourDAO;
         public TourLogPostgresDAO()
@@ -74,6 +75,12 @@ namespace TourPlanner.PostgresDB
                 await _tourDAO.FindById((Guid)reader["TourId"]), (int)reader["MaxSpeed"], (Guid)reader["Id"]));
             return tourlogs;
 
+        }
+        public async Task DeleteTourLog(Guid id)
+        {
+            DbCommand command = _database.CreateCommand(SQL_DELETE_TOURLOG);
+            _database.DefineParameter<Guid>(command, "@Id", DbType.Guid, id);
+            await _database.ExecuteScalar(command);
         }
     }
 }
