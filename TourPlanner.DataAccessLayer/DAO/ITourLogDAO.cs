@@ -9,5 +9,6 @@ namespace TourPlanner.DataAccessLayer.DAO
         Task<TourLog> FindById(Guid id);
         Task<TourLog> AddNewTourLog(TourLog log);
         Task<IEnumerable<TourLog>> GetLogForTour(Tour tour);
+        Task DeleteTourLog(Guid id);
     }
 }
