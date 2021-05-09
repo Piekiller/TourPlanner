@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.Models", "TourP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.DataAccessLayer", "TourPlanner.DataAccessLayer\TourPlanner.DataAccessLayer.csproj", "{75E886F2-CD86-48A6-934D-83E94B931DED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BusinessLayer", "TourPlanner.BusinessLayer\TourPlanner.BusinessLayer.csproj", "{D82E1D85-0A0C-479C-9E0C-FED15BD1A487}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.PostgresDB", "TourPlanner.PostgresDB\TourPlanner.PostgresDB.csproj", "{692AA651-8567-4889-8D69-D31DE7840E11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{75E886F2-CD86-48A6-934D-83E94B931DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75E886F2-CD86-48A6-934D-83E94B931DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75E886F2-CD86-48A6-934D-83E94B931DED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D82E1D85-0A0C-479C-9E0C-FED15BD1A487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D82E1D85-0A0C-479C-9E0C-FED15BD1A487}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D82E1D85-0A0C-479C-9E0C-FED15BD1A487}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D82E1D85-0A0C-479C-9E0C-FED15BD1A487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{692AA651-8567-4889-8D69-D31DE7840E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{692AA651-8567-4889-8D69-D31DE7840E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{692AA651-8567-4889-8D69-D31DE7840E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{692AA651-8567-4889-8D69-D31DE7840E11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
