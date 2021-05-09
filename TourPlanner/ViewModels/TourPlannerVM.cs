@@ -75,20 +75,32 @@ namespace TourPlanner.ViewModels
             _addTour.Visibility = System.Windows.Visibility.Hidden;//Closing makes the window unusable for reshowing it.
 
             MapQuest map = new MapQuest();
-            Route route = await map.GetRoute(StartPoint, EndPoint);
-            Guid ig = await map.SaveImage(route);
+            await map.GetRoute(StartPoint, EndPoint).ContinueWith(async route =>
+            {
+                Route route1 = await route;
+                if (route1 is null)
+                {
+                    this.Name = string.Empty;
+                    this.Description = string.Empty;
+                    this.Distance = 0;
+                    this.StartPoint = string.Empty;
+                    this.EndPoint = string.Empty;
+                    return;
+                }
+                Guid ig = await map.SaveImage(route1);
 
-            Tour t = new Tour(this.Name, this.Description, Environment.CurrentDirectory +"\\"+ ig.ToString()+".jpg", this.Distance,this.StartPoint,this.EndPoint);
-            this.Name = string.Empty;
-            this.Description = string.Empty;
-            this.Distance = 0;
-            this.StartPoint = string.Empty;
-            this.EndPoint= string.Empty;
+                Tour t = new Tour(this.Name, this.Description, Environment.CurrentDirectory + "\\" + ig.ToString() + ".jpg", this.Distance, this.StartPoint, this.EndPoint);
+                
+                this.Name = string.Empty;
+                this.Description = string.Empty;
+                this.Distance = 0;
+                this.StartPoint = string.Empty;
+                this.EndPoint = string.Empty;
 
-            Tours.Add(t);
-            ITourDAO tourDAO = DALFactory.CreateTourDAO();
-            await tourDAO.AddNewTour(t);
-
+                Tours.Add(t);
+                ITourDAO tourDAO = DALFactory.CreateTourDAO();
+                await tourDAO.AddNewTour(t);
+            });
         }
     }
 }

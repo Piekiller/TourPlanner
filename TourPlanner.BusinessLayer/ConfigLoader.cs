@@ -11,10 +11,7 @@ namespace TourPlanner.BusinessLayer
     {
         public static Configuration Configuration { get;private set; }
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        /// <summary>
-        /// Loads the config into a configuration object.
-        /// </summary>
-        public static void LoadConfig()
+        static ConfigLoader()
         {
             string test = Environment.CurrentDirectory + @"\Config.json";
             if (!File.Exists(test))
@@ -22,14 +19,14 @@ namespace TourPlanner.BusinessLayer
                 _log.Error("Config file not found");
                 throw new FileNotFoundException("Config file not found");
             }
-            string config=File.ReadAllText("Config.json");
+            string config = File.ReadAllText("Config.json");
             try
             {
-                Configuration=JsonConvert.DeserializeObject<Configuration>(config); 
+                Configuration = JsonConvert.DeserializeObject<Configuration>(config);
             }
-            catch(JsonReaderException ex)
+            catch (JsonReaderException ex)
             {
-                _log.Error("Config file nor correctly formatted: "+ex.Message);
+                _log.Error("Config file nor correctly formatted: " + ex.Message);
                 throw new FileFormatException("Config file nor correctly formatted: " + ex.Message);
             }
             _log.Error("Config has been loaded");

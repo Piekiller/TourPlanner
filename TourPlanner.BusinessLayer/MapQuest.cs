@@ -21,7 +21,7 @@ namespace TourPlanner.BusinessLayer
             string key = ConfigLoader.GetMapQuestKey();
             try
             {
-                if (key == null)
+                if (key is null)
                 {
                     _log.Error("Missing mapquestkey in configuration");
                     throw new ConfigurationErrorsException("Missing mapquestkey in configuration");
