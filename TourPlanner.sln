@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.PostgresDB", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.BusinessLayer", "TourPlanner.BusinessLayer\TourPlanner.BusinessLayer.csproj", "{A820C173-25BD-4B69-ACAD-1E55948042BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Tests", "TourPlanner.Tests\TourPlanner.Tests.csproj", "{88EB2920-0821-4166-B610-8D917953434A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A820C173-25BD-4B69-ACAD-1E55948042BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A820C173-25BD-4B69-ACAD-1E55948042BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A820C173-25BD-4B69-ACAD-1E55948042BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88EB2920-0821-4166-B610-8D917953434A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88EB2920-0821-4166-B610-8D917953434A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88EB2920-0821-4166-B610-8D917953434A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88EB2920-0821-4166-B610-8D917953434A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
