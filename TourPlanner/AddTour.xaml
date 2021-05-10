@@ -14,8 +14,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -26,12 +24,10 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"></TextBox>
         <Label Grid.Row="1">Description:</Label>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description, Mode=TwoWay}"></TextBox>
-        <Label Grid.Row="3">Distance:</Label>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Distance, Mode=TwoWay}" ></TextBox>
-        <Label Grid.Row="4">Start Point:</Label>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding StartPoint, Mode=TwoWay}" ></TextBox>
-        <Label Grid.Row="5">End Point:</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding EndPoint, Mode=TwoWay}" ></TextBox>
-        <Button Grid.Row="6" Width="70" Height="20px" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Command="{Binding AddTourCommand}"> Save </Button>
+        <Label Grid.Row="2">Start Point:</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding StartPoint, Mode=TwoWay}" ></TextBox>
+        <Label Grid.Row="3">End Point:</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding EndPoint, Mode=TwoWay}" ></TextBox>
+        <Button Grid.Row="4" Width="70" Height="20px" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" Command="{Binding AddTourCommand}"> Save </Button>
     </Grid>
 </Window>

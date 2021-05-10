@@ -4,8 +4,8 @@ using System.Text;
 
 namespace TourPlanner.BusinessLayer
 {
-    internal class TourDeserialization
+    public class TourDeserialization
     {
-        internal Route route;
+        public Route route;
     }
 }

@@ -30,6 +30,7 @@ namespace TourPlanner.BusinessLayer
                 Uri uri = new Uri($"http://www.mapquestapi.com/directions/v2/route?key={key}&from={from}&to={to}");
                 string data = await webClient.DownloadStringTaskAsync(uri);
                 TourDeserialization tour = JsonConvert.DeserializeObject<TourDeserialization>(data);
+                
                 return tour.route;
             }
             catch (WebException ex)
@@ -60,7 +61,7 @@ namespace TourPlanner.BusinessLayer
                 WebClient webClient = new WebClient();
                 Uri uri = new Uri($"https://www.mapquestapi.com/staticmap/v5/map?session={route.sessionID}&key={key}");
                 Guid guid = Guid.NewGuid();
-                await webClient.DownloadFileTaskAsync(uri, guid.ToString()+".jpg");
+                await webClient.DownloadFileTaskAsync(uri, "Images\\"+guid.ToString()+".jpg");
                 return guid;
             }
             catch (WebException ex)
