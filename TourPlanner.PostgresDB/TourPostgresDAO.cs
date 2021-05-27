@@ -15,7 +15,7 @@ namespace TourPlanner.PostgresDB
         private const string SQL_GET_ALL_TOURS = "SELECT * FROM public.\"Tour\";";
         private const string SQL_INSERT_NEW_TOUR = "INSERT INTO public.\"Tour\" (\"Name\", \"Description\",\"RouteInformation\",\"Distance\",\"Id\",\"StartPoint\",\"EndPoint\") "+
                                                    "VALUES (@Name,@Description,@RouteInformation,@Distance,@Id,@StartPoint,@EndPoint) RETURNING \"Id\";";
-        private const string SQL_DELETE_TOUR = "DELETE FROM public.\"Tour\" WHERE \"Id\"=@Id;";
+        private const string SQL_DELETE_TOUR = "DELETE FROM public.\"Tour\" WHERE \"Id\"=@Id RETURNING \"Id\";";
         private IDatabase _database;
         public TourPostgresDAO()
         {
