@@ -1,24 +1,18 @@
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using log4net;
 using System.Reflection;
-namespace TourPlanner.BusinessLayer
+namespace TourPlanner.BusinessLayer.MapQuest
 {
-    public class MapQuest
+    public static class MapQuest
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        HttpListener listener = new HttpListener();
-        public MapQuest()
+        public static async Task<Route> GetRoute(string from, string to)
         {
-            
-        }
-        public async Task<Route> GetRoute(string from, string to)
-        {
-            string key = ConfigLoader.GetMapQuestKey();
+            string key = ConfigurationManager.AppSettings["MapQuestKey"];
             try
             {
                 if (key is null)
@@ -27,7 +21,7 @@ namespace TourPlanner.BusinessLayer
                     throw new ConfigurationErrorsException("Missing mapquestkey in configuration");
                 }
                 using WebClient webClient = new WebClient();
-                Uri uri = new Uri($"http://www.mapquestapi.com/directions/v2/route?key={key}&from={from}&to={to}");
+                Uri uri = new($"http://www.mapquestapi.com/directions/v2/route?key={key}&from={from}&to={to}");
                 string data = await webClient.DownloadStringTaskAsync(uri);
                 TourDeserialization tour = JsonConvert.DeserializeObject<TourDeserialization>(data);
                 
@@ -35,41 +29,40 @@ namespace TourPlanner.BusinessLayer
             }
             catch (WebException ex)
             {
-                if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+                if (ex.Status is WebExceptionStatus.ProtocolError && ex.Response is not null)
                 {
                     HttpWebResponse resp = (HttpWebResponse)ex.Response;
-                    if (resp.StatusCode == HttpStatusCode.NotFound)
+                    if (resp.StatusCode is HttpStatusCode.NotFound)
                     {
                         _log.Error("Http Request returned a bad request, probably due to a bad parameter: " + ex.Response.ResponseUri);
                         throw new ArgumentException("Http Request returned a bad request, probably due to a bad parameter: " + ex.Response.ResponseUri);
                     }
                 }
                 return null;
-            }
-            
+            } 
         }
-        public async Task<Guid> SaveImage(Route route)
+        public static async Task<Guid> SaveImage(Route route)
         {
-            string key = ConfigLoader.GetMapQuestKey();
+            string key = ConfigurationManager.AppSettings["MapQuestKey"];
             try
             {
-                if (key == null)
+                if (key is null)
                 {
                     _log.Error("Missing mapquestkey in configuration");
                     throw new ConfigurationErrorsException("Missing mapquestkey in configuration");
                 }
                 WebClient webClient = new WebClient();
-                Uri uri = new Uri($"https://www.mapquestapi.com/staticmap/v5/map?session={route.sessionID}&key={key}");
+                Uri uri = new($"https://www.mapquestapi.com/staticmap/v5/map?session={route.sessionID}&key={key}");
                 Guid guid = Guid.NewGuid();
                 await webClient.DownloadFileTaskAsync(uri, "Images\\"+guid.ToString()+".jpg");
                 return guid;
             }
             catch (WebException ex)
             {
-                if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+                if (ex.Status is WebExceptionStatus.ProtocolError && ex.Response is not null)
                 {
                     HttpWebResponse resp = (HttpWebResponse)ex.Response;
-                    if (resp.StatusCode == HttpStatusCode.NotFound)
+                    if (resp.StatusCode is HttpStatusCode.NotFound)
                     {
                         _log.Error("Http Request returned a bad request, probably due to a bad parameter: "+ex.Response.ResponseUri);
                         throw new ArgumentException("Http Request returned a bad request, probably due to a bad parameter: " + ex.Response.ResponseUri);

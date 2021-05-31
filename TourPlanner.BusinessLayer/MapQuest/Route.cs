@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TourPlanner.BusinessLayer
+﻿namespace TourPlanner.BusinessLayer.MapQuest
 {
     public class Route
     {
