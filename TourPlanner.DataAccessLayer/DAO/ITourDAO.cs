@@ -10,5 +10,6 @@ namespace TourPlanner.DataAccessLayer.DAO
         Task<Tour> AddNewTour(Tour tour);
         Task<IEnumerable<Tour>> GetTours();
         Task DeleteTour(Guid id);
+        Task UpdateTour(Tour tour);
     }
 }

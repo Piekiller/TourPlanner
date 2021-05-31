@@ -16,6 +16,7 @@ namespace TourPlanner.PostgresDB
         private const string SQL_INSERT_NEW_TOUR = "INSERT INTO public.\"Tour\" (\"Name\", \"Description\",\"RouteInformation\",\"Distance\",\"Id\",\"StartPoint\",\"EndPoint\") "+
                                                    "VALUES (@Name,@Description,@RouteInformation,@Distance,@Id,@StartPoint,@EndPoint) RETURNING \"Id\";";
         private const string SQL_DELETE_TOUR = "DELETE FROM public.\"Tour\" WHERE \"Id\"=@Id RETURNING \"Id\";";
+        private const string SQL_UPDATE_TOUR = "UPDATE public.\"Tour\" SET \"Name\"=@Name, \"Description\"=@Description,\"RouteInformation\"=@RouteInformation,\"Distance\"=@Distance,\"StartPoint\"=@StartPoint,\"EndPoint\"=@EndPoint WHERE \"Id\"=@Id RETURNING \"Id\";";
         private IDatabase _database;
         public TourPostgresDAO()
         {
@@ -68,5 +69,17 @@ namespace TourPlanner.PostgresDB
             return tours;
         }
 
+        public async Task UpdateTour(Tour tour)
+        {
+            DbCommand command = _database.CreateCommand(SQL_DELETE_TOUR);
+            _database.DefineParameter(command, "@Name", DbType.String, tour.Name);
+            _database.DefineParameter(command, "@Description", DbType.String, tour.Description);
+            _database.DefineParameter(command, "@RouteInformation", DbType.String, tour.RouteInformation);
+            _database.DefineParameter(command, "@Distance", DbType.Double, tour.Distance);
+            _database.DefineParameter(command, "@StartPoint", DbType.String, tour.StartPoint);
+            _database.DefineParameter(command, "@EndPoint", DbType.String, tour.EndPoint);
+            _database.DefineParameter(command, "@Id", DbType.Guid, tour.Id);
+            await _database.ExecuteScalar(command);
+        }
     }
 }

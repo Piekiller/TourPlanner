@@ -19,6 +19,8 @@ namespace TourPlanner.PostgresDB
             "INSERT INTO public.\"TourLog\" (\"Date\",\"Report\",\"Distance\",\"Time\",\"Rating\",\"Id\",\"AvgSpeed\",\"BurnedJoule\",\"Difficulty\",\"HeightDelta\",\"TourId\",\"MaxSpeed\") " +
             "VALUES (@Date,@Report,@Distance,@Time,@Rating,@Id,@AvgSpeed,@BurnedJoule,@Difficulty,@HeightDelta,@TourId,@MaxSpeed) RETURNING \"Id\";";
         private const string SQL_DELETE_TOURLOG = "DELETE FROM public.\"TourLog\" WHERE \"Id\"=@Id;";
+        private const string SQL_UPDATE_TOURLOG = "UPDATE public.\"TourLog\" SET \"Date\"=@Date,\"Report\"=@Report,\"Distance\"=@Distance,"+
+            "\"Time\"=@Time,\"Rating\"=@Rating,\"AvgSpeed\"=@AvgSpeed,\"BurnedJoule\"=@BurnedJoule,\"Difficulty\"=@Difficulty,\"HeightDelta\"=@HeightDelta,\"MaxSpeed\"=@MaxSpeed WHERE \"Id\"=@Id;";
         private IDatabase _database;
         private ITourDAO _tourDAO;
         public TourLogPostgresDAO()
@@ -81,6 +83,22 @@ namespace TourPlanner.PostgresDB
             DbCommand command = _database.CreateCommand(SQL_DELETE_TOURLOG);
             _database.DefineParameter<Guid>(command, "@Id", DbType.Guid, id);
             await _database.ExecuteScalar(command);
+        }
+
+        public async Task UpdateTourLog(TourLog log)
+        {
+            DbCommand command = _database.CreateCommand(SQL_INSERT_NEW_TOURLOG);
+            _database.DefineParameter(command, "@Date", DbType.DateTime, log.Date);
+            _database.DefineParameter(command, "@Report", DbType.String, log.Report);
+            _database.DefineParameter(command, "@Distance", DbType.Double, log.Distance);
+            _database.DefineParameter(command, "@Time", DbType.Time, log.Time);
+            _database.DefineParameter(command, "@Rating", DbType.Int32, log.Rating);
+            _database.DefineParameter(command, "@AvgSpeed", DbType.Double, log.AvgSpeed);
+            _database.DefineParameter(command, "@BurnedJoule", DbType.Int32, log.BurnedJoule);
+            _database.DefineParameter(command, "@Difficulty", DbType.Int32, log.Difficulty);
+            _database.DefineParameter(command, "@HeightDelta", DbType.Int32, log.HeightDelta);
+            _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour);
+            _database.DefineParameter(command, "@MaxSpeed", DbType.Double, log.MaxSpeed);
         }
     }
 }
