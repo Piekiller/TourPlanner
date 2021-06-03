@@ -35,5 +35,9 @@ namespace TourPlanner.Models
                 return false;
             return Id.Equals(other.Id);
         }
+        public override string ToString()
+        {
+            return string.Format(Name + ", " + Description + ", " + Distance + ", " + StartPoint + ", " + EndPoint);
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace TourPlanner.ViewModels
 {
-    internal class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         private readonly Action _execute;
         private readonly Func<bool> _canExecute;
