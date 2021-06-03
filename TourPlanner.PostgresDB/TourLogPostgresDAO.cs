@@ -46,7 +46,7 @@ namespace TourPlanner.PostgresDB
             _database.DefineParameter(command, "@BurnedJoule", DbType.Int32, log.BurnedJoule);
             _database.DefineParameter(command, "@Difficulty", DbType.Int32, log.Difficulty);
             _database.DefineParameter(command, "@HeightDelta", DbType.Int32, log.HeightDelta);
-            _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour);
+            _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour.Id);
             _database.DefineParameter(command, "@MaxSpeed", DbType.Double, log.MaxSpeed);
             return await FindById(await _database.ExecuteScalar(command));
         }
@@ -70,11 +70,15 @@ namespace TourPlanner.PostgresDB
             using IDataReader reader = await _database.ExecuteReader(command);
             List<TourLog> tourlogs = new List<TourLog>();
             while (reader.Read())
+            {
+                Tour tour1 = await _tourDAO.FindById((Guid)reader["TourId"]);
                 tourlogs.Add(new TourLog(
                 (DateTime)reader["Date"], (string)reader["Report"], (double)reader["Distance"],
                 (TimeSpan)reader["Time"], (int)reader["Rating"], (double)reader["AvgSpeed"],
                 (int)reader["BurnedJoule"], (int)reader["Difficulty"], (int)reader["HeightDelta"],
-                await _tourDAO.FindById((Guid)reader["TourId"]), (int)reader["MaxSpeed"], (Guid)reader["Id"]));
+                tour1, (double)reader["MaxSpeed"], (Guid)reader["Id"]));
+            }
+                
             return tourlogs;
 
         }
@@ -87,7 +91,7 @@ namespace TourPlanner.PostgresDB
 
         public async Task UpdateTourLog(TourLog log)
         {
-            DbCommand command = _database.CreateCommand(SQL_INSERT_NEW_TOURLOG);
+            DbCommand command = _database.CreateCommand(SQL_UPDATE_TOURLOG);
             _database.DefineParameter(command, "@Date", DbType.DateTime, log.Date);
             _database.DefineParameter(command, "@Report", DbType.String, log.Report);
             _database.DefineParameter(command, "@Distance", DbType.Double, log.Distance);
@@ -99,6 +103,8 @@ namespace TourPlanner.PostgresDB
             _database.DefineParameter(command, "@HeightDelta", DbType.Int32, log.HeightDelta);
             _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour);
             _database.DefineParameter(command, "@MaxSpeed", DbType.Double, log.MaxSpeed);
+            _database.DefineParameter(command, "@Id", DbType.Double, log.Id);
+            await _database.ExecuteScalar(command);
         }
     }
 }

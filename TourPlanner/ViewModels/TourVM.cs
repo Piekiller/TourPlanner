@@ -1,14 +1,11 @@
 ﻿using AsyncAwaitBestPractices.MVVM;
 using log4net;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using TourPlanner.BusinessLayer;
-using TourPlanner.DataAccessLayer.Common;
-using TourPlanner.DataAccessLayer.DAO;
+using TourPlanner.BusinessLayer.MapQuest;
+using TourPlanner.BusinessLayer.TourFactory;
 using TourPlanner.Mediator;
 using TourPlanner.Models;
 
@@ -50,9 +47,7 @@ namespace TourPlanner.ViewModels
                 return;
 
             window.Visibility = Visibility.Hidden;
-
-            MapQuest map = new();
-            Route route = await map.GetRoute(StartPoint, EndPoint);
+            Route route = await MapQuest.GetRoute(StartPoint, EndPoint);
             if (route is null)
             {
                 this.Name = default;
@@ -61,7 +56,7 @@ namespace TourPlanner.ViewModels
                 this.EndPoint = default;
                 return;
             }
-            Guid ig = await map.SaveImage(route);
+            Guid ig = await MapQuest.SaveImage(route);
             Tour t;
             if (_tour is not null)
                 t = new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint, _tour.Id);
@@ -72,9 +67,10 @@ namespace TourPlanner.ViewModels
             this.Description = default;
             this.StartPoint = default;
             this.EndPoint = default;
-
-            ITourDAO tourDAO = DALFactory.CreateTourDAO();
-            await tourDAO.AddNewTour(t);
+            if (_tour is null)
+                await TourFactory.GetInstance().CreateItem(t);
+            else
+                await TourFactory.GetInstance().UpdateItem(t);
         }
         public void SetMediator(IMediator mediator)
             => this._mediator = mediator;

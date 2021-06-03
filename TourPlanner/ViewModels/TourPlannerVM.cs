@@ -5,8 +5,6 @@ using TourPlanner.Models;
 using AsyncAwaitBestPractices.MVVM;
 using System.Threading.Tasks;
 using TourPlanner.BusinessLayer;
-using TourPlanner.DataAccessLayer.Common;
-using TourPlanner.DataAccessLayer.DAO;
 using System.Windows;
 using System.Windows.Threading;
 using QuestPDF.Fluent;
@@ -14,9 +12,10 @@ using System.IO;
 using TourPlanner.Mediator;
 using System.Windows.Controls;
 using System.Linq;
-using System.Windows.Input;
-using TourPlanner.ViewModels;
-
+using TourPlanner.BusinessLayer.TourFactory;
+using TourPlanner.BusinessLayer.TourLogFactory;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 namespace TourPlanner.ViewModels
 {
     public class TourPlannerVM : ViewModelBase
@@ -37,8 +36,8 @@ namespace TourPlanner.ViewModels
         public AsyncCommand CreateReportCommand { get; private set; }
         public RelayCommand UpdateTourCommand { get; private set; }
         public RelayCommand UpdateTourLogCommand { get; private set; }
-
-        public IDatabase Database { get; private set; }
+        public AsyncCommand ImportCommand { get; private set; }
+        public AsyncCommand ExportCommand { get; private set; }
         private IMediator _mediator;
 
         private AddTour _addTour;
@@ -47,20 +46,25 @@ namespace TourPlanner.ViewModels
         {
             this.AddTourWindowCommand = new (OpenAddTourWindow);
             this.RemoveTourCommand = new (RemoveTour);
+            this.RemoveTourLogCommand = new(RemoveTourLog);
             this.CreateReportCommand = new (CreateReport);
             this.AddTourLogWindowCommand = new(OpenAddTourLogWindow);
             this.UpdateTourCommand = new(OpenUpdateTourWindow);
             this.UpdateTourLogCommand = new(OpenUpdateTourLogWindow);
-
-            this.Database = DALFactory.GetDatabase();
-            ITourDAO tourDAO = DALFactory.CreateTourDAO();
+            this.ImportCommand = new(Import);
+            this.ExportCommand = new(Export);
 
             Task.Factory.StartNew(async () =>
             {
-                List<Tour> tmp = new (await tourDAO.GetTours());
+                List<Tour> tmp = new(await TourFactory.GetInstance().GetItems());
                 await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                 {
-                    tmp.ForEach(t => Tours.Add(t)); //Necessary because ObservableCollection needs to be used by the UI Thread.
+                    tmp.ForEach(async t =>
+                    { 
+                        Tours.Add(t);
+                        List<TourLog> logs = new(await TourLogFactory.GetInstance().GetItem(t));
+                        logs.ForEach(tl => TourLogs.Add(tl));
+                    }); //Necessary because ObservableCollection needs to be used by the UI Thread.
                 }));
             });
 
@@ -92,12 +96,18 @@ namespace TourPlanner.ViewModels
             image.Source = null;
             File.Delete(SelectedTour.RouteInformation);
             //ToDo: VS accesses file so it can't be deleted.
-            ITourDAO tourDAO= DALFactory.CreateTourDAO();
-            await tourDAO.DeleteTour(SelectedTour.Id);
+            await TourFactory.GetInstance().DeleteItem(SelectedTour);
             Tours.Remove(SelectedTour);
             SelectedTour = null;
         }
-
+        private async Task RemoveTourLog()
+        {
+            if (SelectedTourLog is null)
+                return;
+            await TourLogFactory.GetInstance().DeleteItem(SelectedTourLog);
+            TourLogs.Remove(SelectedTourLog);
+            SelectedTourLog = null;
+        }
         private Task CreateReport()
         {
             if (SelectedTour is null)
@@ -115,7 +125,6 @@ namespace TourPlanner.ViewModels
             _addTour.DataContext = tourVM;
             _addTour.Show();
         }
-
         private void OpenUpdateTourLogWindow()
         {
             if (SelectedTour is null&&SelectedTourLog is TourLog)
@@ -126,7 +135,33 @@ namespace TourPlanner.ViewModels
             tourLogVM.SetMediator(_mediator);
             _addTourLog.Show();
         }
-            
+        private async Task Import()
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.Filter = "json files (*.json)|*.json";
+            string data = "";
+            if (openFileDialog.ShowDialog() is not null and true)
+            {
+                data = await File.ReadAllTextAsync(openFileDialog.FileName);
+                List<Tour> tours = JsonConvert.DeserializeObject<Tour[]>(data).ToList();
+                Tours.Clear();
+                tours.ForEach(tour => Tours.Add(tour));
+            }
+        }   
+        private async Task Export()
+        {
+            SaveFileDialog saveFileDialog = new();
+            saveFileDialog.DefaultExt = "*.json";
+            saveFileDialog.Filter = "json files (*.json)|*.json";
+            if (saveFileDialog.ShowDialog() is not null and true)
+            {
+                using Stream stream = saveFileDialog.OpenFile();
+                using StreamWriter sw = new(stream);
+                string data = JsonConvert.SerializeObject(Tours);
+                await sw.WriteLineAsync(data);
+                sw.Flush();
+            }
+        }
         public void SaveNewTour(Tour t)
         {
             if(Tours.Contains(t))//Can be found because Equals is overwritten

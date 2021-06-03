@@ -1,13 +1,9 @@
-﻿using AsyncAwaitBestPractices.MVVM;
-using log4net;
+﻿using log4net;
 using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using TourPlanner.BusinessLayer;
-using TourPlanner.DataAccessLayer.Common;
-using TourPlanner.DataAccessLayer.DAO;
+using TourPlanner.BusinessLayer.TourLogFactory;
 using TourPlanner.Mediator;
 using TourPlanner.Models;
 
@@ -84,6 +80,10 @@ namespace TourPlanner.ViewModels
             this.Difficulty = default;
             this.HeightDelta = default;
             this.MaxSpeed = default;
+            if (_tourLog is null)
+                TourLogFactory.GetInstance().CreateItem(t);
+            else
+                TourLogFactory.GetInstance().UpdateItem(t);
         }
 
     }

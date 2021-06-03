@@ -71,7 +71,7 @@ namespace TourPlanner.PostgresDB
 
         public async Task UpdateTour(Tour tour)
         {
-            DbCommand command = _database.CreateCommand(SQL_DELETE_TOUR);
+            DbCommand command = _database.CreateCommand(SQL_UPDATE_TOUR);
             _database.DefineParameter(command, "@Name", DbType.String, tour.Name);
             _database.DefineParameter(command, "@Description", DbType.String, tour.Description);
             _database.DefineParameter(command, "@RouteInformation", DbType.String, tour.RouteInformation);
