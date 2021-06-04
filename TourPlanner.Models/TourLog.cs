@@ -18,8 +18,9 @@ namespace TourPlanner.Models
         public int Difficulty { get; private set; }
         public int HeightDelta { get; private set; }
         public double MaxSpeed { get; private set; }
+        public Tour Tour { get; private set; }
 
-        public TourLog(DateTime date, string report, double distance, TimeSpan time, int rating, double avgSpeed, int burnedJoule, int difficulty, int heightdelta, double maxspeed)
+        public TourLog(DateTime date, string report, double distance, TimeSpan time, int rating, double avgSpeed, int burnedJoule, int difficulty, int heightdelta, Tour tour,double maxspeed)
         {
             Date = date;
             Report = report;
@@ -32,9 +33,10 @@ namespace TourPlanner.Models
             Difficulty = difficulty;
             HeightDelta = heightdelta;
             MaxSpeed = maxspeed;
+            Tour = tour;
         }
 
-        public TourLog(DateTime date, string report, double distance, TimeSpan time, int rating, double avgSpeed, int burnedJoule, int difficulty, int heightdelta, double maxspeed, Guid id):this(date, report, distance, time, rating, avgSpeed, burnedJoule, difficulty, heightdelta, maxspeed)
+        public TourLog(DateTime date, string report, double distance, TimeSpan time, int rating, double avgSpeed, int burnedJoule, int difficulty, int heightdelta, Tour tour, double maxspeed, Guid id):this(date, report, distance, time, rating, avgSpeed, burnedJoule, difficulty, heightdelta,tour, maxspeed)
             => this.Id = id;
         public bool Equals([AllowNull] TourLog other)
         {
