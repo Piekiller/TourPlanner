@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace TourPlanner.Models
@@ -13,8 +14,8 @@ namespace TourPlanner.Models
         public string StartPoint { get; private set; }
         public string EndPoint { get; private set; }
         public Guid Id { get; private set; }
-        public List<TourLog> Logs { get; private set; }
-        public Tour(string name, string description, string routeInformation, double distance, string startpoint,string endpoint,List<TourLog> logs)
+        public ObservableCollection<TourLog> Logs { get; set; }
+        public Tour(string name, string description, string routeInformation, double distance, string startpoint,string endpoint)
         {
             Name = name;
             Description = description;
@@ -23,10 +24,9 @@ namespace TourPlanner.Models
             Id = Guid.NewGuid();
             StartPoint = startpoint;
             EndPoint = endpoint;
-            Logs = logs;
         }
 
-        public Tour(string name, string description, string route_Information, double distance, string startpoint, string endpoint, List<TourLog> logs, Guid id) : this(name, description, route_Information, distance, startpoint, endpoint,logs)
+        public Tour(string name, string description, string route_Information, double distance, string startpoint, string endpoint, Guid id) : this(name, description, route_Information, distance, startpoint, endpoint)
             => Id = id;
 
         public bool Equals([AllowNull] Tour other)
