@@ -42,14 +42,14 @@ namespace TourPlanner.PostgresDB
         public async Task DeleteTour(Guid id)
         {
             DbCommand command = _database.CreateCommand(SQL_DELETE_TOUR);
-            _database.DefineParameter<Guid>(command, "@Id", DbType.Guid, id);
+            _database.DefineParameter(command, "@Id", DbType.Guid, id);
             await _database.ExecuteScalar(command);
         }
 
         public async Task<Tour> FindById(Guid id)
         {
             DbCommand command = _database.CreateCommand(SQL_FIND_BY_ID);
-            _database.DefineParameter<Guid>(command, "@Id", DbType.Guid, id);
+            _database.DefineParameter(command, "@Id", DbType.Guid, id);
             using IDataReader reader = await _database.ExecuteReader(command);
             reader.Read();
             return new Tour(
@@ -61,7 +61,7 @@ namespace TourPlanner.PostgresDB
         {
             DbCommand command = _database.CreateCommand(SQL_GET_ALL_TOURS);
             using IDataReader reader = await _database.ExecuteReader(command);
-            List <Tour> tours= new List<Tour>();
+            List <Tour> tours= new();
             while (reader.Read())
                 tours.Add(new Tour(
                 (string)reader["Name"], (string)reader["Description"], (string)reader["RouteInformation"],

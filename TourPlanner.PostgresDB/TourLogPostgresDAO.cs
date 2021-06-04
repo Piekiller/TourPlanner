@@ -18,9 +18,9 @@ namespace TourPlanner.PostgresDB
         private const string SQL_INSERT_NEW_TOURLOG =
             "INSERT INTO public.\"TourLog\" (\"Date\",\"Report\",\"Distance\",\"Time\",\"Rating\",\"Id\",\"AvgSpeed\",\"BurnedJoule\",\"Difficulty\",\"HeightDelta\",\"TourId\",\"MaxSpeed\") " +
             "VALUES (@Date,@Report,@Distance,@Time,@Rating,@Id,@AvgSpeed,@BurnedJoule,@Difficulty,@HeightDelta,@TourId,@MaxSpeed) RETURNING \"Id\";";
-        private const string SQL_DELETE_TOURLOG = "DELETE FROM public.\"TourLog\" WHERE \"Id\"=@Id;";
+        private const string SQL_DELETE_TOURLOG = "DELETE FROM public.\"TourLog\" WHERE \"Id\"=@Id RETURNING \"Id\";";
         private const string SQL_UPDATE_TOURLOG = "UPDATE public.\"TourLog\" SET \"Date\"=@Date,\"Report\"=@Report,\"Distance\"=@Distance,"+
-            "\"Time\"=@Time,\"Rating\"=@Rating,\"AvgSpeed\"=@AvgSpeed,\"BurnedJoule\"=@BurnedJoule,\"Difficulty\"=@Difficulty,\"HeightDelta\"=@HeightDelta,\"MaxSpeed\"=@MaxSpeed WHERE \"Id\"=@Id;";
+            "\"Time\"=@Time,\"Rating\"=@Rating,\"AvgSpeed\"=@AvgSpeed,\"BurnedJoule\"=@BurnedJoule,\"Difficulty\"=@Difficulty,\"HeightDelta\"=@HeightDelta,\"MaxSpeed\"=@MaxSpeed WHERE \"Id\"=@Id RETURNING \"Id\";";
         private IDatabase _database;
         private ITourDAO _tourDAO;
         public TourLogPostgresDAO()
@@ -66,9 +66,9 @@ namespace TourPlanner.PostgresDB
         public async Task<IEnumerable<TourLog>> GetLogForTour(Tour tour)
         {
             DbCommand command = _database.CreateCommand(SQL_GET_ALL_TOURLOGS);
-            _database.DefineParameter<Guid>(command, "@TourId", DbType.Guid, tour.Id);
+            _database.DefineParameter(command, "@TourId", DbType.Guid, tour.Id);
             using IDataReader reader = await _database.ExecuteReader(command);
-            List<TourLog> tourlogs = new List<TourLog>();
+            List<TourLog> tourlogs = new();
             while (reader.Read())
             {
                 Tour tour1 = await _tourDAO.FindById((Guid)reader["TourId"]);
