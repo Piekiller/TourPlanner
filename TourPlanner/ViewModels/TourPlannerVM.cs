@@ -21,7 +21,6 @@ namespace TourPlanner.ViewModels
     public class TourPlannerVM : ViewModelBase
     {
         public ObservableCollection<Tour> Tours { get; set; } = new();
-        public ObservableCollection<TourLog> TourLogs { get; set; } = new();
         private Tour _selectedTour;
         private TourLog _selectedTourLog;
         public Tour SelectedTour { get => _selectedTour; set { _selectedTour = value; base.RaisePropertyChangedEvent(); } }
@@ -59,11 +58,9 @@ namespace TourPlanner.ViewModels
                 List<Tour> tmp = new(await TourFactory.GetInstance().GetItems());
                 await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                 {
-                    tmp.ForEach(async t =>
+                    tmp.ForEach(t =>
                     { 
                         Tours.Add(t);
-                        List<TourLog> logs = new(await TourLogFactory.GetInstance().GetItem(t));
-                        logs.ForEach(tl => TourLogs.Add(tl));
                     }); //Necessary because ObservableCollection needs to be used by the UI Thread.
                 }));
             });
@@ -102,18 +99,24 @@ namespace TourPlanner.ViewModels
         }
         private async Task RemoveTourLog()
         {
-            if (SelectedTourLog is null)
+            if (SelectedTourLog is null || SelectedTour is null)
                 return;
             await TourLogFactory.GetInstance().DeleteItem(SelectedTourLog);
-            TourLogs.Remove(SelectedTourLog);
+            SelectedTour.Logs.Remove(SelectedTourLog);
             SelectedTourLog = null;
         }
         private Task CreateReport()
         {
             if (SelectedTour is null)
                 return Task.CompletedTask;
-            TourLogReport document = new TourLogReport(SelectedTour,TourLogs.Where(log=>log.Tour.Id==SelectedTour.Id).ToList());
-            document.GeneratePdf("Report\\"+Guid.NewGuid()+".pdf");
+            TourLogReport document = new(SelectedTour,SelectedTour.Logs.ToList());
+            SaveFileDialog saveFileDialog = new();
+            saveFileDialog.DefaultExt = "*.pdf";
+            saveFileDialog.Filter = "pdf files (*.pdf)|*.pdf";
+            if (saveFileDialog.ShowDialog() is not null and true)
+            {
+                document.GeneratePdf(saveFileDialog.FileName);
+            }
             return Task.CompletedTask;
         }
         private void OpenUpdateTourWindow()
@@ -127,7 +130,7 @@ namespace TourPlanner.ViewModels
         }
         private void OpenUpdateTourLogWindow()
         {
-            if (SelectedTour is null&&SelectedTourLog is TourLog)
+            if (SelectedTour is null && SelectedTourLog is TourLog)
                 return;
             _addTourLog = new AddTourLog();
             TourLogVM tourLogVM = new(SelectedTour,SelectedTourLog);
@@ -157,7 +160,7 @@ namespace TourPlanner.ViewModels
             {
                 using Stream stream = saveFileDialog.OpenFile();
                 using StreamWriter sw = new(stream);
-                string data = JsonConvert.SerializeObject(Tours);
+                string data = JsonConvert.SerializeObject(Tours,Formatting.Indented);
                 await sw.WriteLineAsync(data);
                 sw.Flush();
             }
@@ -175,13 +178,15 @@ namespace TourPlanner.ViewModels
         }
         public void SaveNewTourLog(TourLog t)
         {
-            if (TourLogs.Contains(t))
+            if (SelectedTour is null)
+                return;
+            if (SelectedTour.Logs.Contains(t))
             {
-                TourLogs.Remove(t);
-                TourLogs.Add(t);
+                SelectedTour.Logs.Remove(t);
+                SelectedTour.Logs.Add(t);
                 return;
             }
-            TourLogs.Add(t);
+            SelectedTour.Logs.Add(t);
         }
     }
 }
