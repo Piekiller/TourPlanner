@@ -6,6 +6,7 @@ using TourPlanner.DataAccessLayer.Common;
 using TourPlanner.DataAccessLayer.DAO;
 using TourPlanner.Models;
 using System.Linq;
+using System.Collections.ObjectModel;
 namespace TourPlanner.BusinessLayer.TourFactory
 {
     internal class TourFactoryImpl : ITourFactory
@@ -26,7 +27,12 @@ namespace TourPlanner.BusinessLayer.TourFactory
 
         public async Task<IEnumerable<Tour>> GetItems()
         {
-            return await _tourDao.GetTours();
+            IEnumerable<Tour> tours=await _tourDao.GetTours();
+            foreach (var item in tours)
+            {
+                item.Logs=new ObservableCollection<TourLog>(await TourLogFactory.TourLogFactory.GetInstance().GetItem(item));
+            }
+            return tours;
         }
 
         public async Task<IEnumerable<Tour>> Search(string itemname, bool caseSensitive=false)

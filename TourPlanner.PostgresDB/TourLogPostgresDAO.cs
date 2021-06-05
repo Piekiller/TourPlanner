@@ -101,7 +101,7 @@ namespace TourPlanner.PostgresDB
             _database.DefineParameter(command, "@BurnedJoule", DbType.Int32, log.BurnedJoule);
             _database.DefineParameter(command, "@Difficulty", DbType.Int32, log.Difficulty);
             _database.DefineParameter(command, "@HeightDelta", DbType.Int32, log.HeightDelta);
-            _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour);
+            _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour.Id);
             _database.DefineParameter(command, "@MaxSpeed", DbType.Double, log.MaxSpeed);
             _database.DefineParameter(command, "@Id", DbType.Double, log.Id);
             await _database.ExecuteScalar(command);
