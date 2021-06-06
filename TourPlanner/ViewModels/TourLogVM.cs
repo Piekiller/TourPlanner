@@ -35,12 +35,12 @@ namespace TourPlanner.ViewModels
         public double MaxSpeed { get => _maxSpeed; set { _maxSpeed = value; base.RaisePropertyChangedEvent(); } }
 
         public ICommand AddTourLogCommand { get; private set; }
-        public TourLogVM(Tour t, TourLog tourLog=null)
+        public TourLogVM(Tour t, TourLog tourLog = null)
         {
             _tour = t;
             _tourLog = tourLog;
             AddTourLogCommand = new RelayCommand<Window>(AddTourLog);
-            if(tourLog is not null)
+            if (tourLog is not null)
             {
                 Date = tourLog.Date.ToString();
                 Report = tourLog.Report;
@@ -60,17 +60,15 @@ namespace TourPlanner.ViewModels
         private void AddTourLog(Window window)
         {
             if (Date == default || string.IsNullOrWhiteSpace(Report) || Distance == default || Time == default
-                ||Rating == default || BurnedJoule == default || Difficulty == default || HeightDelta == default || MaxSpeed == default)
+                || Rating == default || BurnedJoule == default || Difficulty == default || HeightDelta == default || MaxSpeed == default)
                 return;
-            
+
             window.Hide();
-            TourLog t;
-            if (_tourLog is not null)
-                t = new(DateTime.Parse(Date), Report, Distance, Time, Rating, Distance / Time.TotalHours, BurnedJoule, Difficulty, HeightDelta, _tour, MaxSpeed, _tourLog.Id);
-            else
-                t = new (DateTime.Parse(Date), Report,Distance, Time, Rating, Distance / Time.TotalHours,BurnedJoule,Difficulty,HeightDelta, _tour, MaxSpeed);
+            TourLog t = _tourLog is not null
+                ? (new(DateTime.Parse(Date), Report, Distance, Time, Rating, Distance / Time.TotalHours, BurnedJoule, Difficulty, HeightDelta, _tour, MaxSpeed, _tourLog.Id))
+                : (new(DateTime.Parse(Date), Report, Distance, Time, Rating, Distance / Time.TotalHours, BurnedJoule, Difficulty, HeightDelta, _tour, MaxSpeed));
             _mediator.Notify(this, t);
-            _log.Debug("New TourLog has been added");
+            _log.Debug("New TourLog has been added or updated");
             this.Date = default;
             this.Report = default;
             this.Distance = default;
