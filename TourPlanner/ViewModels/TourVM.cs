@@ -11,7 +11,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
 {
-    class TourVM:ViewModelBase
+    class TourVM : ViewModelBase
     {
         private IMediator _mediator;
         private string _name;
@@ -27,11 +27,11 @@ namespace TourPlanner.ViewModels
         public AsyncCommand<Window> AddTourCommand { get; private set; }
 
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        public TourVM(Tour t=null, IMediator mediator = null)
+        public TourVM(Tour t = null, IMediator mediator = null)
         {
             this._mediator = mediator;
             AddTourCommand = new AsyncCommand<Window>(AddTour);
-            if(t is not null)
+            if (t is not null)
             {
                 _tour = t;
                 Name = t.Name;
@@ -40,8 +40,7 @@ namespace TourPlanner.ViewModels
                 EndPoint = t.EndPoint;
             }
         }
-
-        public async Task AddTour(Window window)
+        private async Task AddTour(Window window)
         {
             if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description) || string.IsNullOrWhiteSpace(StartPoint) || string.IsNullOrWhiteSpace(EndPoint))
                 return;
@@ -54,14 +53,15 @@ namespace TourPlanner.ViewModels
                 this.Description = default;
                 this.StartPoint = default;
                 this.EndPoint = default;
+                _log.Error("GetRoute did not return a Route, proabalby due to bad parameters");
                 return;
             }
-            Guid ig = await MapQuest.SaveImage(route);
-            Tour t;
-            if (_tour is not null)
-                t = new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint, _tour.Id);
-            else
-                t = new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint);
+            string ig = await MapQuest.SaveImage(route);
+            Tour t = _tour is not null
+                ? (new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint, _tour.Id))
+                : (new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint));
+
+            _log.Debug("New Tour has been added or updated");
             _mediator.Notify(this, t);
             this.Name = default;
             this.Description = default;

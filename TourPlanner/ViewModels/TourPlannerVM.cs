@@ -16,15 +16,19 @@ using TourPlanner.BusinessLayer.TourFactory;
 using TourPlanner.BusinessLayer.TourLogFactory;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+
 namespace TourPlanner.ViewModels
 {
     public class TourPlannerVM : ViewModelBase
     {
         public ObservableCollection<Tour> Tours { get; set; } = new();
+        public ObservableCollection<Tour> SearchedTours { get; set; } = new();
         private Tour _selectedTour;
         private TourLog _selectedTourLog;
+
         public Tour SelectedTour { get => _selectedTour; set { _selectedTour = value; base.RaisePropertyChangedEvent(); } }
         public TourLog SelectedTourLog { get => _selectedTourLog; set { _selectedTourLog = value; base.RaisePropertyChangedEvent(); } }
+        public SearchTourVM TourVm { get; set; } 
 
         public RelayCommand AddTourWindowCommand { get; private set; }
         public RelayCommand AddTourLogWindowCommand { get; private set; }
@@ -37,16 +41,17 @@ namespace TourPlanner.ViewModels
         public RelayCommand UpdateTourLogCommand { get; private set; }
         public AsyncCommand ImportCommand { get; private set; }
         public AsyncCommand ExportCommand { get; private set; }
-        private IMediator _mediator;
 
+        private IMediator _mediator;
         private AddTour _addTour;
         private AddTourLog _addTourLog;
+
         public TourPlannerVM()
         {
-            this.AddTourWindowCommand = new (OpenAddTourWindow);
-            this.RemoveTourCommand = new (RemoveTour);
+            this.AddTourWindowCommand = new(OpenAddTourWindow);
+            this.RemoveTourCommand = new(RemoveTour);
             this.RemoveTourLogCommand = new(RemoveTourLog);
-            this.CreateReportCommand = new (CreateReport);
+            this.CreateReportCommand = new(CreateReport);
             this.AddTourLogWindowCommand = new(OpenAddTourLogWindow);
             this.UpdateTourCommand = new(OpenUpdateTourWindow);
             this.UpdateTourLogCommand = new(OpenUpdateTourLogWindow);
@@ -59,9 +64,12 @@ namespace TourPlanner.ViewModels
                 await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                 {
                     tmp.ForEach(t =>
-                    { 
+                    {
                         Tours.Add(t);
                     }); //Necessary because ObservableCollection needs to be used by the UI Thread.
+                    foreach (var item in Tours)
+                        SearchedTours.Add(item);
+                    TourVm = new SearchTourVM(SearchedTours.ToList());
                 }));
             });
 
@@ -72,7 +80,7 @@ namespace TourPlanner.ViewModels
         private void OpenAddTourWindow()
         {
             _addTour = new AddTour();
-            TourVM tourVM = new(null,_mediator);
+            TourVM tourVM = new(null, _mediator);
             _addTour.DataContext = tourVM;
             _addTour.Visibility = Visibility.Visible;
         }
@@ -88,11 +96,9 @@ namespace TourPlanner.ViewModels
         }
         private async Task RemoveTour(Image image)
         {
-            if (SelectedTour is null||image is null)
+            if (SelectedTour is null || image is null)
                 return;
             image.Source = null;
-            File.Delete(SelectedTour.RouteInformation);
-            //ToDo: VS accesses file so it can't be deleted.
             await TourFactory.GetInstance().DeleteItem(SelectedTour);
             Tours.Remove(SelectedTour);
             SelectedTour = null;
@@ -109,7 +115,7 @@ namespace TourPlanner.ViewModels
         {
             if (SelectedTour is null)
                 return Task.CompletedTask;
-            TourLogReport document = new(SelectedTour,SelectedTour.Logs.ToList());
+            TourLogReport document = new(SelectedTour, SelectedTour.Logs.ToList());
             SaveFileDialog saveFileDialog = new();
             saveFileDialog.DefaultExt = "*.pdf";
             saveFileDialog.Filter = "pdf files (*.pdf)|*.pdf";
@@ -133,7 +139,7 @@ namespace TourPlanner.ViewModels
             if (SelectedTour is null && SelectedTourLog is TourLog)
                 return;
             _addTourLog = new AddTourLog();
-            TourLogVM tourLogVM = new(SelectedTour,SelectedTourLog);
+            TourLogVM tourLogVM = new(SelectedTour, SelectedTourLog);
             _addTourLog.DataContext = tourLogVM;
             tourLogVM.SetMediator(_mediator);
             _addTourLog.Show();
@@ -150,7 +156,7 @@ namespace TourPlanner.ViewModels
                 Tours.Clear();
                 tours.ForEach(tour => Tours.Add(tour));
             }
-        }   
+        }
         private async Task Export()
         {
             SaveFileDialog saveFileDialog = new();
@@ -160,21 +166,20 @@ namespace TourPlanner.ViewModels
             {
                 using Stream stream = saveFileDialog.OpenFile();
                 using StreamWriter sw = new(stream);
-                string data = JsonConvert.SerializeObject(Tours,Formatting.Indented);
+                string data = JsonConvert.SerializeObject(Tours, Formatting.Indented);
                 await sw.WriteLineAsync(data);
                 sw.Flush();
             }
         }
         public void SaveNewTour(Tour t)
         {
-            if(Tours.Contains(t))//Can be found because Equals is overwritten
+            if (Tours.Contains(t))//Can be found because Equals is overwritten
             {
                 Tours.Remove(t);//Remove old object with wrong reference
                 Tours.Add(t);//Add old object with right reference.
                 return;
-            } 
+            }
             Tours.Add(t);
-                
         }
         public void SaveNewTourLog(TourLog t)
         {
