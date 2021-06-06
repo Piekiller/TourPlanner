@@ -152,9 +152,9 @@ namespace TourPlanner.ViewModels
             if (openFileDialog.ShowDialog() is not null and true)
             {
                 data = await File.ReadAllTextAsync(openFileDialog.FileName);
-                List<Tour> tours = JsonConvert.DeserializeObject<Tour[]>(data).ToList();
-                Tours.Clear();
-                tours.ForEach(tour => Tours.Add(tour));
+                List<Tour> tours = JsonConvert.DeserializeObject<List<Tour>>(data);
+                SearchedTours.Clear();
+                tours.ForEach(tour => SearchedTours.Add(tour));
             }
         }
         private async Task Export()
