@@ -14,8 +14,8 @@ using System.Windows.Controls;
 using System.Linq;
 using TourPlanner.BusinessLayer.TourFactory;
 using TourPlanner.BusinessLayer.TourLogFactory;
+using TourPlanner.BusinessLayer.SerializationFactory;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 
 namespace TourPlanner.ViewModels
 {
@@ -152,7 +152,7 @@ namespace TourPlanner.ViewModels
             if (openFileDialog.ShowDialog() is not null and true)
             {
                 data = await File.ReadAllTextAsync(openFileDialog.FileName);
-                List<Tour> tours = JsonConvert.DeserializeObject<List<Tour>>(data);
+                List<Tour> tours = new(SerializationFactory.GetInstance().Deserialize(data));
                 SearchedTours.Clear();
                 tours.ForEach(tour => SearchedTours.Add(tour));
             }
@@ -166,13 +166,15 @@ namespace TourPlanner.ViewModels
             {
                 using Stream stream = saveFileDialog.OpenFile();
                 using StreamWriter sw = new(stream);
-                string data = JsonConvert.SerializeObject(Tours, Formatting.Indented);
+                string data = SerializationFactory.GetInstance().Serialize(Tours);
                 await sw.WriteLineAsync(data);
                 sw.Flush();
             }
         }
         public void SaveNewTour(Tour t)
         {
+            if (t is null)
+                return;
             if (Tours.Contains(t))//Can be found because Equals is overwritten
             {
                 Tours.Remove(t);//Remove old object with wrong reference
@@ -183,7 +185,7 @@ namespace TourPlanner.ViewModels
         }
         public void SaveNewTourLog(TourLog t)
         {
-            if (SelectedTour is null)
+            if (SelectedTour is null||t is null)
                 return;
             if (SelectedTour.Logs.Contains(t))
             {

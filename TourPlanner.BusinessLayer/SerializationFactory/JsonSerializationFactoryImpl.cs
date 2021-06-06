@@ -4,7 +4,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.BusinessLayer.SerializationFactory
 {
-    public class JsonSerialiazationFactoryImpl : ISerializationFactory
+    public class JsonSerializationFactoryImpl : ISerializationFactory
     {
         public IEnumerable<Tour> Deserialize(string data)
             => JsonConvert.DeserializeObject<IEnumerable<Tour>>(data);

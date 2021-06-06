@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace TourPlanner.BusinessLayer.SerializationFactory
 {
-    public class SerialiazationFactory
+    public class SerializationFactory
     {
         private static ISerializationFactory _instance;
 
         public static ISerializationFactory GetInstance()
         {
             if (_instance is null)
-                _instance = new JsonSerialiazationFactoryImpl();
+                _instance = new JsonSerializationFactoryImpl();
             return _instance;
         }
     }
