@@ -16,6 +16,7 @@
     <ProjectReference Include="..\TourPlanner.BusinessLayer\TourPlanner.BusinessLayer.csproj" />
     <ProjectReference Include="..\TourPlanner.DataAccessLayer\TourPlanner.DataAccessLayer.csproj" />
     <ProjectReference Include="..\TourPlanner.PostgresDB\TourPlanner.PostgresDB.csproj" />
+    <ProjectReference Include="..\TourPlanner\TourPlanner.csproj" />
   </ItemGroup>
 
   <ItemGroup>
