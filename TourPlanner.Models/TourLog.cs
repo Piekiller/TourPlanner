@@ -6,19 +6,19 @@ using System.Text;
 namespace TourPlanner.Models
 {
     public class TourLog
-    { 
-        public DateTime Date { get; set; }
-        public string Report { get; set; }
+    {
+        public DateTime Date { get; set; } = new DateTime();
+        public string Report { get; set; } = string.Empty;
         public double Distance { get; set; }
-        public TimeSpan Time { get; set; }
+        public TimeSpan Time { get; set; } = new TimeSpan();
         public int Rating { get; set; }
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public double AvgSpeed { get; set; }
         public int BurnedJoule { get; set; }
         public int Difficulty { get; set; }
         public int HeightDelta { get; set; }
         public double MaxSpeed { get; set; }
-        public Tour Tour { get; set; }
+        public Tour Tour { get; set; } = new Tour();
 
         public TourLog()
         {
