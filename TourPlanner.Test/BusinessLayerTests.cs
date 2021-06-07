@@ -13,7 +13,7 @@ namespace TourPlanner.Test
 {
     class BusinessLayerTests
     {
-        private Mock<ITourFactory> _mock = new();
+        private Mock<TourFactoryImpl> _mock = new();
         [SetUp]
         public void Init()
         {
@@ -24,31 +24,29 @@ namespace TourPlanner.Test
         public async Task Test_Search_Invalid_Case_Sensitive()
         {
             List<Tour> ret = (await _mock.Object.Search("Test",true)).ToList();
-            Assert.AreEqual(ret.Count, 0);
+            Assert.AreEqual(0, ret.Count);
         }
         [Test]
         public async Task Test_Search_Valid_Case_Sensitive()
         {
             List<Tour> ret = (await _mock.Object.Search("test", true)).ToList();
-            Assert.AreEqual(ret.Count, 0);
+            Assert.AreEqual(1, ret.Count);
         }
         [Test]
         public async Task Test_Search_Valid_Not_Case_Sensitive()
         {
             List<Tour> ret = (await _mock.Object.Search("Test")).ToList();
-            Assert.AreNotEqual(ret.Count, 0);
+            Assert.AreNotEqual(0,ret.Count);
         }
         [Test]
-        public async Task Test_Search_Null_Case_Sensitive()
+        public void Test_Search_Null_Case_Sensitive()
         {
-            List<Tour> ret = (await _mock.Object.Search(null, true)).ToList();
-            Assert.AreEqual(ret.Count, 0);
+            Assert.ThrowsAsync(typeof(ArgumentNullException), async () => await _mock.Object.Search(null, true));
         }
         [Test]
-        public async Task Test_Search_Null_Not_Case_Sensitive()
+        public void Test_Search_Null_Not_Case_Sensitive()
         {
-            List<Tour> ret = (await _mock.Object.Search(null)).ToList();
-            Assert.AreEqual(ret.Count, 0);
+            Assert.ThrowsAsync(typeof(ArgumentNullException), async () => await _mock.Object.Search(null));
         }
         [Test]
         public void Test_Deserialize_Invalid_Empty()
@@ -64,13 +62,13 @@ namespace TourPlanner.Test
         public void Test_Deserialize_Valid()
         {
             List<Tour> tours = SerializationFactory.GetInstance().Deserialize("[{\"Name\":\"Test\"}]").ToList();
-            Assert.AreEqual(tours[0].Name, "Test");
+            Assert.AreEqual("Test", tours[0].Name);
         }
         [Test]
         public void Test_Serialize_Invalid_Null()
         {
             string data=SerializationFactory.GetInstance().Serialize(null);
-            Assert.AreEqual(data,"null");
+            Assert.AreEqual("null",data);
         }
         [Test]
         public void Test_Serialize_Valid()

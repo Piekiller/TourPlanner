@@ -29,7 +29,7 @@ namespace TourPlanner.Test
             IDatabase db = new Database("");
             DbCommand command = db.CreateCommand("");
             db.DeclareParameter(command, "test", System.Data.DbType.String);
-            Assert.AreEqual(command.Parameters.Count,1);
+            Assert.AreEqual(1, command.Parameters.Count);
         }
 
     }
