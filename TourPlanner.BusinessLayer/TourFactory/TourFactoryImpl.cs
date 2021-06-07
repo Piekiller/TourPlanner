@@ -1,6 +1,5 @@
 ﻿using log4net;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using TourPlanner.DataAccessLayer.Common;
 using TourPlanner.DataAccessLayer.DAO;
@@ -8,6 +7,8 @@ using TourPlanner.Models;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System;
+
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("TourPlanner.Test")]
 namespace TourPlanner.BusinessLayer.TourFactory
@@ -46,6 +47,8 @@ namespace TourPlanner.BusinessLayer.TourFactory
 
         public async Task<IEnumerable<Tour>> Search(string itemname, bool caseSensitive=false)
         {
+            if (itemname is null)
+                throw new ArgumentNullException("Parameter itemname should not be null");
             _log.Debug("Search in tours");
             IEnumerable<Tour> tours = await GetItems();
             if(caseSensitive)
