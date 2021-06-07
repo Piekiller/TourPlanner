@@ -31,7 +31,6 @@ namespace TourPlanner.Models
             StartPoint = startpoint;
             EndPoint = endpoint;
         }
-        [JsonConstructor]
         public Tour(string name, string description, string route_Information, double distance, string startpoint, string endpoint, Guid id) : this(name, description, route_Information, distance, startpoint, endpoint)
             => Id = id;
         public override string ToString()
