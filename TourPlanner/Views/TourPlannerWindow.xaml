@@ -30,7 +30,7 @@
         <Button Grid.Column="0" Grid.Row="1" Margin="5" Width="75" Height="30" Command="{Binding ImportCommand}">Import</Button>
         <Button Grid.Column="1" Grid.Row="1" Margin="5" Width="75" Height="30" Command="{Binding ExportCommand}">Export</Button>
         <Button HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1" Margin="5" Width="125" Height="30" Command="{Binding CreateReportCommand}">Report</Button>
-        <uc:Searchbar Grid.Column="0" Grid.Row="2" Margin="5" Grid.ColumnSpan="4" DataContext="{Binding Path=TourVm}">
+        <uc:Searchbar Grid.Column="0" Grid.Row="2" Margin="5" Grid.ColumnSpan="4" DataContext="{Binding}">
         </uc:Searchbar>
         <Grid Grid.Column="0" Grid.Row="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5">
             <Grid.RowDefinitions>
@@ -47,7 +47,7 @@
             <Button Grid.Column="1" Grid.Row="0" Command="{Binding AddTourWindowCommand}">+</Button>
             <Button Grid.Column="2" Grid.Row="0" Command="{Binding RemoveTourCommand }" CommandParameter="{Binding ElementName=TourImage}">-</Button>
             <Button Grid.Column="3" Grid.Row="0" Command="{Binding UpdateTourCommand}">[]</Button>
-            <ListBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding SearchedTours, Mode=TwoWay}" SelectedItem="{Binding SelectedTour}">
+            <ListBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Tours, Mode=TwoWay}" SelectedItem="{Binding SelectedTour}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
