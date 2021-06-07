@@ -64,12 +64,9 @@ namespace TourPlanner.BusinessLayer.MapQuest
                     _log.Error("Missing mapquestkey in configuration");
                     throw new ConfigurationErrorsException("Missing mapquestkey in configuration");
                 }
-                if (!File.Exists("Images\\" + route.sessionID + ".jpg"))//If the Image doesn't already exist
-                {
-                    using WebClient webClient = new();
-                    Uri uri = new($"https://www.mapquestapi.com/staticmap/v5/map?session={route.sessionID}&key={key}");
-                    await webClient.DownloadFileTaskAsync(uri, "Images\\" + route.sessionID + ".jpg");
-                }
+                using WebClient webClient = new();
+                Uri uri = new($"https://www.mapquestapi.com/staticmap/v5/map?session={route.sessionID}&key={key}");
+                await webClient.DownloadFileTaskAsync(uri, "Images\\" + route.sessionID + ".jpg");
                 return route.sessionID;
             }
             catch (WebException ex)

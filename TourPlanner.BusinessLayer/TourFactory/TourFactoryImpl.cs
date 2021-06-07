@@ -7,6 +7,9 @@ using TourPlanner.DataAccessLayer.DAO;
 using TourPlanner.Models;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+[assembly: InternalsVisibleTo("TourPlanner.Test")]
 namespace TourPlanner.BusinessLayer.TourFactory
 {
     internal class TourFactoryImpl : ITourFactory
@@ -25,8 +28,9 @@ namespace TourPlanner.BusinessLayer.TourFactory
             _log.Debug("Delete Tour with id: " + t.Id);
         }
 
-        public async Task<IEnumerable<Tour>> GetItems()
+        public virtual async Task<IEnumerable<Tour>> GetItems()
         {
+            _log.Debug("Get all Tours");
             IEnumerable<Tour> tours=await _tourDao.GetTours();
             foreach (var item in tours)
             {
@@ -37,6 +41,7 @@ namespace TourPlanner.BusinessLayer.TourFactory
 
         public async Task<IEnumerable<Tour>> Search(string itemname, bool caseSensitive=false)
         {
+            _log.Debug("Search in tours");
             IEnumerable<Tour> tours = await GetItems();
             if(caseSensitive)
                 return tours.Where(tour => tour.Name.Contains(itemname));
@@ -45,6 +50,7 @@ namespace TourPlanner.BusinessLayer.TourFactory
 
         public async Task UpdateItem(Tour t)
         {
+            _log.Debug("Update Tour with id: "+t.Id);
             await _tourDao.UpdateTour(t);
         }
     }
