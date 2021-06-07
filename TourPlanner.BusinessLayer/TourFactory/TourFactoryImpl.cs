@@ -14,8 +14,9 @@ namespace TourPlanner.BusinessLayer.TourFactory
 {
     internal class TourFactoryImpl : ITourFactory
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(typeof(TourFactoryImpl));
         private ITourDAO _tourDao = DALFactory.CreateTourDAO();
+        private ITourLogDAO _tourLogDAO = DALFactory.CreateTourLogDAO();
         public async Task CreateItem(Tour t)
         {
             await _tourDao.AddNewTour(t);
@@ -24,6 +25,10 @@ namespace TourPlanner.BusinessLayer.TourFactory
 
         public async Task DeleteItem(Tour t)
         {
+            foreach (var item in t.Logs)
+            {
+                await _tourLogDAO.DeleteTourLog(item.Id);
+            }
             await _tourDao.DeleteTour(t.Id);
             _log.Debug("Delete Tour with id: " + t.Id);
         }
