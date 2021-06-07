@@ -57,6 +57,8 @@ namespace TourPlanner.ViewModels
                 return;
             }
             string ig = await MapQuest.SaveImage(route);
+            if (ig is null)
+                return;
             Tour t = _tour is not null
                 ? (new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint, _tour.Id))
                 : (new(this.Name, this.Description, Environment.CurrentDirectory + "\\Images\\" + ig.ToString() + ".jpg", route.distance, this.StartPoint, this.EndPoint));

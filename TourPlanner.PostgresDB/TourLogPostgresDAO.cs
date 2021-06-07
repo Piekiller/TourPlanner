@@ -56,11 +56,13 @@ namespace TourPlanner.PostgresDB
             DbCommand command = _database.CreateCommand(SQL_FIND_BY_ID);
             _database.DefineParameter<Guid>(command, "@Id", DbType.Guid, id);
             using IDataReader reader = await _database.ExecuteReader(command);
+            if (!reader.Read())
+                return null;
             return new TourLog(
                 (DateTime)reader["Date"], (string)reader["Report"], (double)reader["Distance"], 
                 (TimeSpan)reader["Time"], (int)reader["Rating"],  (double)reader["AvgSpeed"], 
                 (int)reader["BurnedJoule"], (int)reader["Difficulty"], (int)reader["HeightDelta"], 
-                await _tourDAO.FindById((Guid)reader["TourId"]), (int)reader["MaxSpeed"], (Guid)reader["Id"]);
+                await _tourDAO.FindById((Guid)reader["TourId"]), (double)reader["MaxSpeed"], (Guid)reader["Id"]);
         }
 
         public async Task<IEnumerable<TourLog>> GetLogForTour(Tour tour)
@@ -103,7 +105,7 @@ namespace TourPlanner.PostgresDB
             _database.DefineParameter(command, "@HeightDelta", DbType.Int32, log.HeightDelta);
             _database.DefineParameter(command, "@TourId", DbType.Guid, log.Tour.Id);
             _database.DefineParameter(command, "@MaxSpeed", DbType.Double, log.MaxSpeed);
-            _database.DefineParameter(command, "@Id", DbType.Double, log.Id);
+            _database.DefineParameter(command, "@Id", DbType.Guid, log.Id);
             await _database.ExecuteScalar(command);
         }
     }

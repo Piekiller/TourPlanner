@@ -157,6 +157,11 @@ namespace TourPlanner.ViewModels
                 {
                     tour.Id = Guid.NewGuid();
                     await TourFactory.GetInstance().CreateItem(tour);
+                    foreach (var item in tour.Logs)
+                    {
+                        item.Tour = tour;
+                        await TourLogFactory.GetInstance().CreateItem(item);
+                    }
                     Tours.Add(tour);
                 });
             }
