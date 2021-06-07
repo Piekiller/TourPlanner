@@ -7,15 +7,15 @@ using System.Text.Json.Serialization;
 namespace TourPlanner.Models
 {
     public class Tour
-    { 
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string RouteInformation { get; set; }
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string RouteInformation { get; set; } = string.Empty;
         public double Distance { get; set; }
-        public string StartPoint { get; set; }
-        public string EndPoint { get; set; }
-        public Guid Id { get; set; }
-        public ObservableCollection<TourLog> Logs { get; set; }
+        public string StartPoint { get; set; } = string.Empty;
+        public string EndPoint { get; set; } = string.Empty;
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public ObservableCollection<TourLog> Logs { get; set; } = new ObservableCollection<TourLog>();
         public Tour()
         {
 
